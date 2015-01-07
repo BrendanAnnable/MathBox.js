@@ -1,6 +1,6 @@
 /**
  * MicroEvent - to make any js object an event emitter (server or browser)
- * 
+ *
  * - pure javascript - server compatible, browser compatible
  * - dont rely on the browser doms
  * - super simple - you get it immediatly, no mistery, no magic involved
@@ -108,7 +108,7 @@ MicroEvent.mixin	= function(destObject){
 	for(var i = 0; i < props.length; i ++){
 		destObject.prototype[props[i]]	= MicroEvent.prototype[props[i]];
 	}
-}
+};
 
 // Make world microevents nicer.
 tQuery.World.prototype.on = tQuery.World.prototype.addEventListener;
@@ -163,7 +163,7 @@ tQuery.World.registerInstance('addThreeBox', function (element, options) {
   // Sanity check
   console.assert(this.hasThreeBox() !== true);
 
-  // Handle parameters  
+  // Handle parameters
   options  = tQuery.extend(options, {
     cameraControls: false,
     cursor:         true,
@@ -235,12 +235,12 @@ tQuery.World.registerInstance('addThreeBox', function (element, options) {
   }
 
   // Allow 'p' to make screenshot.
-  if (THREEx && THREEx.Screenshot && options.screenshot) {
+  if (window.THREEx && THREEx.Screenshot && options.screenshot) {
     ctx.screenshot = THREEx.Screenshot.bindKey(tRenderer);
   }
 
   // Allow 'f' to go fullscreen where this feature is supported.
-  if (THREEx && THREEx.FullScreen && options.fullscreen && THREEx.FullScreen.available()) {
+  if (window.THREEx && THREEx.FullScreen && options.fullscreen && THREEx.FullScreen.available()) {
     ctx.fullscreen = THREEx.FullScreen.bindKey();
   }
 
@@ -295,7 +295,7 @@ tQuery.World.registerInstance('removeThreeBox', function () {
 });
 /**
  * Update renderer and camera when the element is resized
- * 
+ *
  * @param {Object} renderer The renderer to update
  * @param {Object} camera The camera to update
  * @param {Object} element The DOM element to size to
@@ -341,18 +341,18 @@ ThreeBox.ElementResize = function (renderer, camera, domElement, options) {
 
   // Update size immediately.
   setTimeout(callback, 0);
-}
+};
 
 ThreeBox.ElementResize.bind  = function (renderer, camera, element, options) {
   return new ThreeBox.ElementResize(renderer, camera, element, options);
-}
+};
 
 /**
  * Change resize scale.
  */
 ThreeBox.ElementResize.prototype.scale = function (scale) {
   this.scale = scale;
-}
+};
 
 /**
  * Stop watching window resize
@@ -360,7 +360,7 @@ ThreeBox.ElementResize.prototype.scale = function (scale) {
 ThreeBox.ElementResize.prototype.unbind = function () {
   window.removeEventListener('resize', callback);
   domElement.removeEventListener('resize', callback);
-}
+};
 
 MicroEvent.mixin(ThreeBox.ElementResize);/**
  * Click-and-drag mouse controls with Euler angles, yaw and pitch.
@@ -448,13 +448,7 @@ ThreeBox.OrbitControls.prototype = {
     this.camera.position.x = Math.cos(this.phi) * Math.cos(this.theta) * this.orbit;
     this.camera.position.y = Math.sin(this.theta) * this.orbit;
     this.camera.position.z = Math.sin(this.phi) * Math.cos(this.theta) * this.orbit;
-
-    if (this.camera.position.addSelf) {
-      this.camera.position.addSelf(this.lookAt);
-    }
-    else {
-      this.camera.position.add(this.lookAt);
-    }
+    this.camera.position.add(this.lookAt);
     this.camera.lookAt(this.lookAt);
   }//,
 
@@ -462,12 +456,12 @@ ThreeBox.OrbitControls.prototype = {
 
 ThreeBox.OrbitControls.bind  = function (camera, domElement, options) {
   return new ThreeBox.OrbitControls(camera, domElement, options);
-}
+};
 
 MicroEvent.mixin(ThreeBox.OrbitControls);
 /**
  * Set cursor shape and auto-hide with timer.
- * 
+ *
  * @param {Object} element DOM element to track mouse movement on.
  * @param {Object} options Options for ThreeBox.
  */
@@ -511,11 +505,12 @@ ThreeBox.Cursor = function (element, options) {
       element.removeEventListener('mousemove', moved);
     }
   };
-}
+};
 
 ThreeBox.Cursor.bind  = function (element, options) {
   return ThreeBox.Cursor(element, options);
-}
+};
+
 // Quick'n'dirty loader for additional .html content
 ThreeBox.preload = function (files, callback) {
   // Only callback passed.
@@ -537,8 +532,8 @@ ThreeBox.preload = function (files, callback) {
     // Call callback if done.
     if (--remaining == 0) {
       callback(accumulate);
-    };
-  }
+    }
+  };
 
   // Prepare extensions
   var l = ThreeBox.preload;
@@ -592,7 +587,7 @@ ThreeBox.preload.html = function (file, name, callback) {
     }
 
     // Insert HTML via div
-    if (res.replace(/\s*/g) != '') {
+    if (res.replace(/\s*/g, '') != '') {
       var div = document.createElement('div');
       div.innerHTML = res;
       document.body.appendChild(div);
@@ -672,7 +667,7 @@ ThreeRTT.toTarget = function (rtt) {
   if (ThreeRTT.World && (rtt instanceof ThreeRTT.World)) return rtt.target();
   // RenderTarget or texture
   return rtt;
-}
+};
 
 // Convert World/Stage/RenderTarget into texture uniform.
 ThreeRTT.toTexture = function (rtt, i) {
@@ -681,7 +676,7 @@ ThreeRTT.toTexture = function (rtt, i) {
   // Convert virtual RenderTarget object to uniform
   if (ThreeRTT.RenderTarget && (rtt instanceof ThreeRTT.RenderTarget)) return rtt.read();
   return rtt;
-}
+};
 
 // Make microevent methods chainable.
 MicroEvent.prototype.on   = function () { MicroEvent.prototype.bind.apply(this, arguments);    return this; }
@@ -691,7 +686,8 @@ MicroEvent.mixin	= function(destObject){
 	for(var i = 0; i < props.length; i ++){
 		destObject.prototype[props[i]]	= MicroEvent.prototype[props[i]];
 	}
-}
+};
+
 /**
  * Render-to-texture stage. Contains scene/camera/target + optional full screen quad.
  */
@@ -716,7 +712,7 @@ ThreeRTT.Stage = function (renderer, options) {
 
   // Set size and aspect
   this.size(options.width, options.height);
-}
+};
 
 ThreeRTT.Stage.prototype = {
 
@@ -833,9 +829,9 @@ ThreeRTT.Stage.prototype = {
     surface.renderDepth = Infinity;
 
     return surface;
-  },
+  }
 
-}
+};
 /**
  * Compose render-to-textures into a scene by adding a full screen quad
  * that uses the textures as inputs.
@@ -850,7 +846,7 @@ ThreeRTT.Compose = function (rtts, fragmentShader, textures, uniforms) {
   mesh.frustumCulled = false;
 
   this.add(mesh);
-}
+};
 
 ThreeRTT.Compose.prototype = new THREE.Object3D();
 // Handy Camera factory
@@ -892,7 +888,7 @@ ThreeRTT.Camera = function (options) {
  *
  * Contains multiple buffers for rendering from/to itself transparently
  * and/or remembering multiple frames of history.
- * 
+ *
  * Set options.history to the number of frames of history needed (default 0).
  *
  * Render a frame:
@@ -944,7 +940,7 @@ ThreeRTT.RenderTarget = function (renderer, options) {
 
   // Clear buffer
   this.clear();
-},
+};
 
 ThreeRTT.RenderTarget.prototype = {
 
@@ -1328,10 +1324,12 @@ ThreeRTT.ScaleMaterial = function (renderTargetFrom, renderTargetTo, scale) {
  */
 ThreeRTT.DownsampleMaterial = function (renderTargetFrom, renderTargetTo) {
   return new ThreeRTT.ScaleMaterial(renderTargetFrom, renderTargetTo, 2);
-}
+};
+
 ThreeRTT.UpsampleMaterial = function (renderTargetFrom, renderTargetTo) {
   return new ThreeRTT.ScaleMaterial(renderTargetFrom, renderTargetTo, 0.5);
-}
+};
+
 /**
  * Helper for making ShaderMaterials that raytrace in camera space per pixel.
  */
@@ -1349,15 +1347,15 @@ ThreeRTT.RaytraceMaterial = function (renderTargets, camera, fragmentShader, tex
   uniforms = _.extend(material.uniforms || {}, {
     raytraceViewport: {
       type: 'v2',
-      value: new THREE.Vector2(),
+      value: new THREE.Vector2()
     },
     raytracePosition: {
       type: 'v3',
-      value: new THREE.Vector3(),
+      value: new THREE.Vector3()
     },
     raytraceMatrix: {
       type: 'm4',
-      value: new THREE.Matrix4(),
+      value: new THREE.Matrix4()
     },
   });
 
@@ -1379,7 +1377,9 @@ ThreeRTT.RaytraceMaterial = function (renderTargets, camera, fragmentShader, tex
 
   // Lookup shaders and build material
   return material;
-};/**
+};
+
+/**
  * Debug/testing helper that displays the given rendertargets in a grid
  */
 ThreeRTT.Display = function (targets, gx, gy) {
@@ -1394,7 +1394,7 @@ ThreeRTT.Display = function (targets, gx, gy) {
 
   THREE.Object3D.call(this);
   this.make();
-}
+};
 
 ThreeRTT.Display.prototype = _.extend(new THREE.Object3D(), {
 
@@ -1428,7 +1428,9 @@ ThreeRTT.Display.prototype = _.extend(new THREE.Object3D(), {
     }
   }
 
-});/**
+});
+
+/**
  * Handle a world for rendering to texture (tQuery).
  *
  * @param world (object) World to sync rendering to.
@@ -1766,7 +1768,8 @@ ThreeRTT.RenderQueue.bind = function (world) {
     return world[key];
   }
   return (world[key] = new ThreeRTT.RenderQueue(world));
-}
+};
+
 /**
  * Create a render-to-texture world for this world.
  */
@@ -1860,7 +1863,7 @@ tQuery.registerStatic('createScaleMaterial', function (worldFrom, worldTo, scale
  */
 
 // Check dependencies.
-;(function (deps) {
+(function (deps) {
   for (var i in deps) {
     if (!window[i]) throw "Error: ShaderGraph requires " + deps[i];
   }
@@ -2061,7 +2064,7 @@ $.Block.Snippet.makeOutlets = function (snippet) {
   snippet.outlets = outlets;
 
   return outlets;
-}
+};
 
 /**
  * Compile a GLSL snippet call by tracing inputs across the graph.
@@ -2302,7 +2305,7 @@ $.Program = function () {
   this.fragmentShader = '';
 
   this.includes = { vertex: [], fragment: [] };
-}
+};
 
 // TODO Add support for array types.
 $.Program.types = {
@@ -2442,7 +2445,7 @@ $.Snippet = function (code) {
   this.body       = '';
 
   this.parseCode(code);
-}
+};
 
 $.Snippet.cache = {};
 
@@ -2463,7 +2466,7 @@ $.Snippet.defaults = {
   'vec3':        new THREE.Vector3(),
   'vec4':        new THREE.Vector4(),
   'mat4':        new THREE.Matrix4(),
-  'sampler2D':   0,
+  'sampler2D':   function () { return THREE.ImageUtils.generateDataTexture(1, 1, new THREE.Color(0xffffff)) },
   'samplerCube': 0//,
 };
 
@@ -2537,10 +2540,13 @@ $.Snippet.prototype = {
         name = match[3],
         array = match[4];
 
+    var value = $.Snippet.defaults[type] || 0;
+    value = typeof(value) === 'function' ?  value() : value;
+
     this.uniforms.push({
       name: name,
       type: this.type(type, array),
-      value: $.Snippet.defaults[type] || 0,
+      value: value,
       signature: signature//,
     });
   },
@@ -3060,7 +3066,9 @@ $.Outlet.prototype = {
   }//,
 };
 
-})(ShaderGraph);/**
+})(ShaderGraph);
+
+/**
  * MathBox.js. Math plotting tool for three.js / webgl.
  */
 
@@ -3648,7 +3656,7 @@ MicroEvent.mixin(MathBox.Stage);
 
 MathBox.Stage.prototype = _.extend(MathBox.Stage.prototype, {
 
-  /** 
+  /**
    * Rendering loop
    */
 
@@ -4195,7 +4203,7 @@ MathBox.Stage.prototype = _.extend(MathBox.Stage.prototype, {
 MathBox.Materials = function (stage) {
   this.stage = stage;
   this.cache = {};
-}
+};
 
 MathBox.Materials.prototype = {
 
@@ -4221,7 +4229,7 @@ MathBox.Materials.prototype = {
   clone: function (material) {
     var clone = new THREE.ShaderMaterial({
       vertexShader: material.vertexShader,
-      fragmentShader: material.fragmentShader,
+      fragmentShader: material.fragmentShader
     });
     clone.attributes      = material.attributes ? {} : null;
     clone.uniforms        = {};
@@ -4232,13 +4240,13 @@ MathBox.Materials.prototype = {
     _.each(material.uniforms, function (uniform, key) {
       clone.uniforms[key] = {
         type: uniform.type,
-        value: (uniform.value && uniform.value.clone) ? uniform.value.clone() : uniform.value,
+        value: (uniform.value && uniform.value.clone) ? uniform.value.clone() : uniform.value
       };
     });
     _.each(material.attributes, function (attributes, key) {
       clone.attributes[key] = {
         type: attributes.type,
-        value: attributes.value,
+        value: attributes.value
       };
     });
 
@@ -4375,7 +4383,7 @@ MathBox.Materials.prototype = {
         points: 'fragmentSolidPoint',
         mesh: options.shaded
               ? 'fragmentShaded'
-              : 'fragmentSolid',
+              : 'fragmentSolid'
       }[options.type] || 'fragmentSolid';
 
       factory.material('vertexOutput', fragment);
@@ -4390,7 +4398,7 @@ MathBox.Materials.prototype = {
       uniforms: program.uniforms,
       attributes: program.attributes,
       vertexShader: program.vertexShader,
-      fragmentShader: program.fragmentShader,
+      fragmentShader: program.fragmentShader
     });
 
     // Set necessary three.js flags
@@ -4535,12 +4543,12 @@ tQuery.World.registerInstance('mathBox', function (element, options) {
   this.tScene().add(mathbox);
 
   // White background
-	this._renderer.setClearColorHex( 0xFFFFFF, 1 );
+	this._tRenderer.setClearColor("#ffffff");
 
   // Hook into rendering loop
   mathbox.unhook = function () {
-    this.loop().unhookPreRender(callback)
-  }
+    this.loop().unhookPreRender(callback);
+  };
   this.loop().hookPreRender(callback);
 
   if (!options.cameraControls) {
@@ -5328,7 +5336,7 @@ MathBox.Overlay.prototype = {
 
     // Transform into camera space
     v.copy(object.position);
-    camera.matrixWorldInverse.multiplyVector3(v);
+    v.applyMatrix4(camera.matrixWorldInverse);
 
     // Project to 2D and convert to pixels
     var x, y;
@@ -5345,12 +5353,12 @@ MathBox.Overlay.prototype = {
     if (object.distance) {
       // Add tangent and project again
       q.copy(object.tangent).multiplyScalar(epsilon);
-      q.addSelf(object.position);
-      camera.matrixWorldInverse.multiplyVector3(q);
+      q.add(object.position);
+      q.applyMatrix4(camera.matrixWorldInverse);
 
       // Find difference and scale it
       var sign = object.distance > 0 ? 1 : -1;
-      q.subSelf(v);
+      q.sub(v);
       q.z = 0;
       q.normalize().multiplyScalar(object.distance);
       x += Math.abs(q.y) * sign;
@@ -5405,7 +5413,7 @@ MathBox.Sprite = function (element, tangent, distance) {
 }
 
 MathBox.Sprite.prototype = _.extend(new THREE.Object3D(), {
-  
+
 });MathBox.Primitive = function (options) {
   // Allow inheritance constructor
   if (options === null) return;
@@ -5786,7 +5794,7 @@ MathBox.Axis.prototype = _.extend(new MathBox.Primitive(null), {
       p[axis] = min + x * inv;
 
       points[x].set.apply(points[x], p);
-      points[x].addSelf(add);
+      points[x].add(add);
     });
 
     // Show/hide line
@@ -5817,7 +5825,7 @@ MathBox.Axis.prototype = _.extend(new MathBox.Primitive(null), {
         // Tick points for ticks (2 each)
         var j = i*2;
         tickPoints[j].set.apply(tickPoints[j], p);
-        tickPoints[j].addSelf(add);
+        tickPoints[j].add(add);
         tickSigns[j] = 1;
 
         tickPoints[j+1].copy(tickPoints[j]);
@@ -6205,7 +6213,7 @@ MathBox.Vector.prototype = _.extend(new MathBox.Primitive(null), {
         last.copy(vertices[i-1]);
         viewport.to(current);
         viewport.to(last);
-        current.subSelf(last).multiplySelf(scale);
+        current.sub(last).multiply(scale);
 
         var l = current.length();
 
@@ -6214,7 +6222,7 @@ MathBox.Vector.prototype = _.extend(new MathBox.Primitive(null), {
 
         // Foreshorten line
         var f = l - clipped;
-        current.normalize().multiplyScalar(f).divideSelf(scale).addSelf(last);
+        current.normalize().multiplyScalar(f).divide(scale).add(last);
 
         // Transform back
         viewport.from(current);
@@ -6304,7 +6312,7 @@ MathBox.Surface.prototype = _.extend(new MathBox.Primitive(null), {
       flipSided: options.flipSided,
       shaded: options.shaded,
       smooth: true,
-      dynamic: options.live,
+      dynamic: options.live
     }, style);
     this.line = new MathBox.Renderable.Mesh(geometry, {
       type: 'mesh',
@@ -6315,7 +6323,7 @@ MathBox.Surface.prototype = _.extend(new MathBox.Primitive(null), {
     }, style);
     this.points = new MathBox.Renderable.Mesh(geometry.vertices, {
       type: 'points',
-      dynamic: options.live,
+      dynamic: options.live
     }, style);
 
     // Prepare tangent arrays for shading
@@ -6418,20 +6426,20 @@ MathBox.Surface.prototype = _.extend(new MathBox.Primitive(null), {
 
           /* high quality */
           /*
-          tangents[0][o].sub(vertices[right + j * stride], vertices[left + j * stride]).multiplyScalar(epsilon).addSelf(v);
-          tangents[1][o].sub(vertices[i + down * stride], vertices[i + up * stride]).multiplyScalar(epsilon).addSelf(v);
+          tangents[0][o].subVectors(vertices[right + j * stride], vertices[left + j * stride]).multiplyScalar(epsilon).add(v);
+          tangents[1][o].subVectors(vertices[i + down * stride], vertices[i + up * stride]).multiplyScalar(epsilon).add(v);
           */
 
           /* low quality */
           if (right == i) {
-            tangents[0][o].sub(v, vertices[left + j * stride]).addSelf(v);
+            tangents[0][o].subVectors(v, vertices[left + j * stride]).add(v);
           }
           else {
             tangents[0][o].copy(vertices[right + j * stride]);
           }
 
           if (down == j) {
-            tangents[1][o].sub(v, vertices[i + up * stride]).addSelf(v);
+            tangents[1][o].subVectors(v, vertices[i + up * stride]).add(v);
           }
           else {
             tangents[1][o].copy(vertices[i + down * stride]);
@@ -6574,9 +6582,9 @@ MathBox.BezierSurface.prototype = _.extend(new MathBox.Surface(null), {
 
     // Apply bezier control weights for cubic polynomial
     var m0 = this.coefficients;
-    this.matrixX.multiplySelf(m0).transpose().multiplySelf(m0);
-    this.matrixY.multiplySelf(m0).transpose().multiplySelf(m0);
-    this.matrixZ.multiplySelf(m0).transpose().multiplySelf(m0);
+    this.matrixX.multiply(m0).transpose().multiply(m0);
+    this.matrixY.multiply(m0).transpose().multiply(m0);
+    this.matrixZ.multiply(m0).transpose().multiply(m0);
 
     var uniforms = {
       bezierSurfaceX: this.matrixX,
@@ -6779,15 +6787,13 @@ MathBox.Renderable.prototype = {
   },
 
   composeTransform: function (position, rotation, scale) {
-		var mRotation = THREE.Matrix4.__m1;
-		var mScale = THREE.Matrix4.__m2;
+		var mRotation = new THREE.Matrix4();
+		var mScale = new THREE.Matrix4();
 
-    mRotation.identity();
-		mRotation.setRotationFromEuler(rotation, this.object.eulerOrder);
-
+		mRotation.makeRotationFromEuler(new THREE.Euler(rotation.x, rotation.y, rotation.z, this.object.rotation.order));
 		mScale.makeScale(scale.x, scale.y, scale.z);
 
-		this.mathTransform.multiply(mRotation, mScale);
+		this.mathTransform.multiplyMatrices(mRotation, mScale);
 
     var te = this.mathTransform.elements;
 		te[12] = position.x;
@@ -6910,7 +6916,7 @@ MathBox.Renderable.Mesh.prototype = _.extend(new MathBox.Renderable(null), {
 
     // Decide on THREE renderable.
     var klass = {
-      points: THREE.ParticleSystem,
+      points: THREE.PointCloud,
       line: THREE.Line,
       mesh: THREE.Mesh//,
     }[type];
@@ -7010,13 +7016,13 @@ MathBox.Renderable.ArrowHead.prototype = _.extend(new MathBox.Renderable(null), 
     // Calculate arrow in world space
     var from = this._from.copy(this.from);
     var to = this._to.copy(this.to);
-    this.mathTransform.multiplyVector3(from);
-    this.mathTransform.multiplyVector3(to);
+    from.applyMatrix4(this.mathTransform);
+    to.applyMatrix4(this.mathTransform);
     viewport.to(from);
     viewport.to(to);
 
     // Calculate axis of arrowhead.
-    var diff = this.diff.sub(from, to);
+    var diff = this.diff.subVectors(from, to);
     if (diff.length() < .001) {
       this.object.visible = false;
       return;
@@ -7034,14 +7040,14 @@ MathBox.Renderable.ArrowHead.prototype = _.extend(new MathBox.Renderable(null), 
     this.normal.normalize();
 
     // Prepare binormal
-    var bi = this.bi.cross(this.normal, this.diff).normalize();
+    var bi = this.bi.crossVectors(this.normal, this.diff).normalize();
 
     // Renormalize axes.
-    var normal = this.normal.cross(this.bi, this.diff);
+    var normal = this.normal.crossVectors(this.bi, this.diff);
 
     // Prepare object matrix to place arrowhead
     var size = options.size;
-    var matrix = new THREE.Matrix4(
+    var matrix = new THREE.Matrix4().set(
       bi.x, diff.x, normal.x, to.x,
       bi.y, diff.y, normal.y, to.y,
       bi.z, diff.z, normal.z, to.z,
@@ -7051,18 +7057,18 @@ MathBox.Renderable.ArrowHead.prototype = _.extend(new MathBox.Renderable(null), 
 
     // Add arrowhead transform before object matrix
     this.object.updateMatrix();
-    this.object.matrix.multiplySelf(matrix);
+    this.object.matrix.multiply(matrix);
 
     // Move cone down so tip is at 0,0,0
     matrix.identity().setPosition({ x: 0, y: 0.5 - offset, z: 0 });
-    this.object.matrix.multiplySelf(matrix);
+    this.object.matrix.multiply(matrix);
 
     // Override object matrix
     this.object.matrixAutoUpdate = false;
     this.object.matrixWorldNeedsUpdate = true;
 
     MathBox.Renderable.prototype.adjust.call(this, viewport);
-  },
+  }
 
 });
 
@@ -7238,7 +7244,7 @@ MathBox.Renderable.Labels.prototype = _.extend(new MathBox.Renderable(null), {
       // Transform anchor point
       sprite.position.copy(points[i]);
       viewport.to(sprite.position);
-      stage.matrix.multiplyVector3(sprite.position);
+      sprite.position.applyMatrix4(stage.matrix);
       sprite.distance = options.distance;
 
       // Set opacity
@@ -7401,11 +7407,11 @@ MathBox.ViewportCartesian.prototype = _.extend(new MathBox.Viewport(null), {
   },
 
   to: function (vector) {
-    this.transform.multiplyVector3(vector);
+    vector.applyMatrix4(this.transform);
   },
 
   from: function (vector) {
-    this.inverse.multiplyVector3(vector);
+    vector.applyMatrix4(this.inverse);
   },
 
   axis: function (axis) {
@@ -7555,7 +7561,7 @@ MathBox.ViewportPolar.prototype = _.extend(new MathBox.ViewportCartesian(null), 
     }
 
     // Apply viewport
-    this.transform.multiplyVector3(vector);
+    vector.applyMatrix4(this.transform);
   },
 
   from: function (vector) {
@@ -7567,7 +7573,7 @@ MathBox.ViewportPolar.prototype = _.extend(new MathBox.ViewportCartesian(null), 
         helix = this._uniforms.polarHelix;
 
     // Apply inverse viewport
-    this.inverse.multiplyVector3(vector);
+    vector.applyMatrix4(this.inverse);
 
     // Polar to cartesian
     if (alpha > 0.0001) {
@@ -7730,18 +7736,18 @@ MathBox.ViewportProjective.prototype = _.extend(new MathBox.ViewportCartesian(nu
 
   to: function (vector) {
     // Apply projective transform
-    this._uniforms.projectiveTransform.multiplyVector3(vector);
+    vector.applyProjection(this._uniforms.projectiveTransform)
 
     // Apply viewport
-    this.transform.multiplyVector3(vector);
+    vector.applyMatrix4(this.transform);
   },
 
   from: function (vector) {
     // Apply inverse viewport
-    this.inverse.multiplyVector3(vector);
+    vector.applyMatrix4(this.inverse);
 
     // Apply inverse projective transform
-    this._uniforms.projectiveInverse.multiplyVector3(vector);
+    vector.applyProjection(this._uniforms.projectiveInverse);
   },
 
   update: function (stage) {
@@ -7837,7 +7843,7 @@ MathBox.ViewportSphere.prototype = _.extend(new MathBox.ViewportCartesian(null),
     }
 
     // Apply viewport
-    this.transform.multiplyVector3(vector);
+    vector.applyMatrix4(this.transform);
   },
 
   from: function (vector) {
@@ -7848,7 +7854,7 @@ MathBox.ViewportSphere.prototype = _.extend(new MathBox.ViewportCartesian(null),
         alpha = this._uniforms.sphereAlpha;
 
     // Apply inverse viewport
-    this.inverse.multiplyVector3(vector);
+    vector.applyMatrix4(this.inverse);
 
     // Spherical coords to cartesian
     if (alpha > 0.0001) {
